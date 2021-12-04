@@ -1,0 +1,205 @@
+import datetime
+import re
+from datetime import *
+
+class Employee:
+
+    path = "Details.txt"
+    Designation_list = ["Manager","Employee","Intern","Student"]
+    minlen = 5
+
+
+    def __init__(self, x):
+
+        self.name = x[0]
+        self.username = x[1]
+        self.email = x[2]
+        self.password = x[3]
+        self.jod = x[4]
+        self.dob = x[5]
+        self.number = x[6]
+        self.Designation = x[7]
+        self.street = x[8]
+        self.city = x[9]
+        self.State = x[10]
+        self.zip = x[11]
+
+    def validate_name(self):
+        """Validates name for given condition"""
+
+        #checks if the name is string or not
+        if (type(self.name)) != str:
+            raise TypeError('Name must be a string')
+
+        #checks if the name contains only alphabets or not
+        if not self.name.replace(" ","").isalpha():
+            print('Name must contain alphabet only')
+            return False
+        return True
+
+    def validate_user(self):
+        """validates username for given conditions"""
+        if type(self.username) != str:
+            raise TypeError("username must be a string")
+
+       # self.usernames can't be shorter than minlen
+        if len(self.username) < self.minlen:
+            print(f'username should be greater than {self.minlen}')
+            return False
+
+        # self.usernames can only use letters, numbers, dots and underscores
+        if not re.match('^[a-zA-Z0-9._]*$', self.username):
+            print('usernames can only use letters, numbers, dots and underscores')
+            return False
+
+        #self.usernames can't begin with a number
+        if self.username[0].isnumeric():
+            print('usernames can not begin with a number')
+            return False
+        return True
+
+    def validate_email(self):
+        """validates email for given conditions"""
+        reg_ex = r'\b[A-Za-z0-9]+@+[a-z]+\.[A-Z|a-z]{2,}\b'
+
+        # checks if email is a string or not
+        if not type(self.email) == str:
+            print('Email must be a string')
+            return False
+
+        #maps the regular expression with the password
+        if not re.match(reg_ex, self.email):
+            print("Invalid Email Address")
+            return False
+        return True
+
+    def validate_password(self):
+        """validates password for given conditions"""
+        #checks if length of the password is greater than 8 or not and if the pasword is ap=lphabets only
+        if len(self.password) < 8 or self.password.isalpha():
+            print("Invalid Password")
+            return False
+
+        #maps the regular expression with the password
+        if not ((re.search("[A-Za-z]",self.password) and re.search("[0-9]",self.password) and re.search("[_@$]",self.password))):
+            print("Invalid Paassword")
+            return False
+        return True
+
+    def validate_number(self):
+        """validates number for given conditions"""
+
+        #checks if number is integer or not
+        if not (type(self.number) == int):
+            print('Number should be integer')
+            return False
+
+        #checks if number is 10 digit or not
+        if not len(str(self.number)) == 10:
+            print('Number should be 10 digits')
+            return False
+
+        #checks if number is only digit or not
+        if not (str(self.number).isdigit()):
+            print('Number should consist only digits')
+            return False
+        return True
+
+    def validate_designation(self):
+        """validates designation for given conditions"""
+
+        #checks if designation is present in the given list
+        if self.Designation not in self.Designation_list:
+            print(f"choose a designation from {self.Designation_list}")
+            return False
+
+        #checks if the designation is string or not
+        if type(self.Designation) != str:
+            print('Designation must be string')
+            return False
+        return True
+
+    def validate_address(self):
+        """validates address for given conditions"""
+
+        #checks if given address attributes are string or not
+        if type(self.street) and type(self.city) and type(self.State) and type(self.zip) == str and len(  self.zip) == 6:
+            return True
+        else:
+            return False
+
+    def validate_jod_date(self):
+        """validates joining date for given conditions"""
+
+        #checks the format of the given date
+        try:
+            datetime.strptime(self.jod, '%Y-%m-%d')
+            print('right format')
+            return True
+        except:
+            print('Incorrect Format')
+            return False
+
+    def validate_dob_date(self):
+        """validates date of birth for given conditions"""
+
+        # checks if the format of the given date
+        try:
+            datetime.strptime(self.dob, '%Y-%m-%d')
+            print('right format')
+            return True
+        except:
+            print('Incorrect Format')
+            return False
+
+
+    def create_file(self):
+        '''Creates File and writes appropriate attributes if the validations are fullfilled'''
+
+        try:
+            if self.validate_name():
+                f = open(self.path, "a")
+                f.write(f"Name: {self.name} \n")
+                f.close()
+            if self.validate_user():
+                f = open(self.path, "a")
+                f.write(f"Username: {self.username} \n")
+                f.close()
+            if self.validate_email():
+                f = open(self.path, "a")
+                f.write(f"Email: {self.email} \n")
+                f.close()
+            if self.validate_password():
+                f = open(self.path,"a")
+                f.write(f"password: {self.password} \n")
+                f.close()
+            if self.validate_address():
+                f = open(self.path,"a")
+                f.write(f"Street: {self.street}, City: {self.city},State: {self.State},Zip: {self.zip} \n")
+                f.close()
+            if self.validate_number():
+                f = open(self.path, "a")
+                f.write(f"number: {self.number} \n")
+                f.close()
+            if self.validate_designation():
+                f = open(self.path,"a")
+                f.write(f"Designation: {self.Designation} \n")
+                f.close()
+            if self.validate_jod_date() and self.validate_dob_date():
+                f = open(self.path,"a")
+                f.write(f"Joining date: {self.jod}, Birth date: {self.dob} \n\n")
+                print('writing complete')
+                f.close()
+
+        except:
+            raise FileNotFoundError
+
+
+def main():
+    x = ['Vaishnavi Rathod', 'Vratho07',"vrathod24@gmail.com", "rathodV@247",'2019-03-03','2001-12-27',8329932873, "worker", "BesaStreet", "Nagpur", "Maharashtra", "445507"]
+    emp = Employee(x)
+    emp.create_file()
+
+
+if __name__ == '__main__':
+    main()
